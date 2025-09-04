@@ -1,5 +1,5 @@
 {-# language TemplateHaskell #-}
-{-# OPTIONS_GHC -O2 #-}
+{-# OPTIONS_GHC -O2 #-} -- won't happen on `-O0`
 
 module G where
 
@@ -8,14 +8,12 @@ import Language.Haskell.TH hiding (Type)
 import Language.Haskell.TH qualified as TH
 
 bounds :: [Word8]
-bounds = [minBound..maxBound]
+bounds = [127,129]
 
-{-# INLINE utf8LengthByLeader #-}
+{-# INLINE utf8LengthByLeader #-} --inline irrelevant
 utf8LengthByLeader :: Word8 -> Int
 utf8LengthByLeader w
-  | w < 0x80  = 1
-  | w < 0xE0  = 2
-  | w < 0xF0  = 3
+  | w < 128   = 1
   | otherwise = 4
 
 useLeader :: [Word8] -> Q [Dec]
